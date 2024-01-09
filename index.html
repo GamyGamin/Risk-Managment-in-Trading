@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Risk Managment Calculator</title>
+</head>
+<body bgcolor="yellow">
+    <center>
+        <label for="radio">Select max Leverage </label><input type="radio" id="x20" name="maxLeverage" value="HTML"><label for="html">x20</label><input type="radio" id="x25" name="maxLeverage" value="HTML"><label for="html">x25</label><input type="radio" id="x50" name="maxLeverage" value="HTML"><label for="html">x50</label><input type="radio" id="x100" name="maxLeverage" value="HTML"><label for="html">x100</label><input type="radio" id="x125" name="maxLeverage" value="HTML"  checked="checked"><label for="html">x125</label><br><br>
+        <label>ROI % on SL hit </label><input type="text" id="txtROI" value="70"> <br><br>
+        <label>Enter Stop loss precentage </label><input type="text" id="txtInput"> <br><br><button onclick="submit()">Click Here to calculate</button>
+        <br><br>
+        <div id="lev"></div><br>
+        <div id="capital"></div><br>
+        <div id="sl"></div>
+    </center>
+</body>
+
+<script>
+function submit(){
+    var slROI = document.getElementById("txtROI").value;
+
+    var slPercentage = document.getElementById("txtInput").value;
+
+    if(document.getElementById('x20').checked){
+        maxLeverage = 20;
+    }
+    else if (document.getElementById('x25').checked) {
+        maxLeverage = 25;
+    } 
+    else if (document.getElementById('x50').checked) {
+        maxLeverage = 50;
+    } 
+    else if (document.getElementById('x100').checked) {
+        maxLeverage = 100;
+    } 
+    else if (document.getElementById('x125').checked) {
+        maxLeverage = 125;
+    } 
+    else{maxLeverage = 10;}
+
+    leverage = slROI / slPercentage;
+
+    if (leverage > maxLeverage){
+        multiFactor = leverage /maxLeverage;
+        capital = multiFactor * 5;
+        leverage = maxLeverage
+    }
+    else if(leverage <= maxLeverage){
+        capital = 5;
+    }
+
+    document.getElementById("lev").innerHTML = `Leverage - ${Math.floor(leverage)}x`;
+    document.getElementById("capital").innerHTML = `Capital % - ${Math.floor(capital)}%`;
+    document.getElementById("sl").innerHTML = `ROI when you Stopped out - ${slROI}%`;
+
+
+    if (slROI > 100){
+        alert("Your ROI is greater than 100%. I recommend you to change ROI");
+    }
+
+}
+</script>
+</html>
