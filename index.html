@@ -3,66 +3,136 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Risk Managment Calculator</title>
+    <title>Risk Management Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: yellow; /* Updated background color */
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            margin-top: 5px;
+        }
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s ease; /* Added animation */
+        }
+        button:hover {
+            background-color: #45a049;
+            transform: scale(1.1); /* Added animation */
+        }
+        #result {
+            margin-top: 20px;
+        }
+        #result div {
+            margin-bottom: 10px;
+        }
+        #result div span {
+            font-weight: bold;
+        }
+    </style>
 </head>
-<body bgcolor="yellow">
-    <center>
-        <label for="radio">Select Max Leverage </label><input type="radio" id="x20" name="maxLeverage" value="HTML"/><label for="html">x20</label><input type="radio" id="x25" name="maxLeverage" value="HTML"/><label for="html">x25</label><input type="radio" id="x50" name="maxLeverage" value="HTML"/><label for="html">x50</label><input type="radio" id="x75" name="maxLeverage" value="HTML"/><label for="html">x75</label><input type="radio" id="x100" name="maxLeverage" value="HTML"/><label for="html">x100</label><input type="radio" id="x125" name="maxLeverage" value="HTML"  checked="checked"><label for="html"/>x125</label><br/><br/>
-        <label>ROI % on SL hit </label><input type="text" id="txtROI" value="70"> <br/><br/>
-        <label>Enter Stop loss precentage </label><input type="text" id="txtInput"> <br/><br/><button onclick="submit()">Click Here to calculate</button>
-        <br/><br/>
-        <div id="lev"></div><br/>
-        <div id="capital"></div><br/>
-        <div id="sl"></div>
-    </center>
+<body>
+    <div class="container">
+        <h2 style="text-align: center;">Risk Management Calculator</h2>
+        <div class="input-group">
+            <label for="txtROI">ROI % on SL hit</label>
+            <input type="text" id="txtROI" value="70">
+        </div>
+        <div class="input-group">
+            <label for="txtInput">Enter Stop loss percentage</label>
+            <input type="text" id="txtInput">
+        </div>
+        <div class="input-group">
+            <label>Select Max Leverage</label><br>
+            <input type="radio" id="x20" name="maxLeverage" value="20" checked>
+            <label for="x20">x20</label>
+            <input type="radio" id="x25" name="maxLeverage" value="25">
+            <label for="x25">x25</label>
+            <input type="radio" id="x50" name="maxLeverage" value="50">
+            <label for="x50">x50</label>
+            <input type="radio" id="x75" name="maxLeverage" value="75">
+            <label for="x75">x75</label>
+            <input type="radio" id="x100" name="maxLeverage" value="100">
+            <label for="x100">x100</label>
+            <input type="radio" id="x125" name="maxLeverage" value="125">
+            <label for="x125">x125</label>
+            <input type="radio" id="x200" name="maxLeverage" value="200">
+            <label for="x200">x200</label>
+        </div>
+        <button id="calculateBtn" onclick="submit()">Calculate</button>
+        <div id="result">
+            <div id="lev"></div>
+            <div id="capital"></div>
+            <div id="sl"></div>
+        </div>
+    </div>
+    <script>
+        document.getElementById("calculateBtn").addEventListener("mouseover", function() {
+            var slPercentage = document.getElementById("txtInput").value;
+            if (slPercentage === "") {
+                this.style.display = "none";
+            }
+        });
+
+        document.getElementById("txtInput").addEventListener("input", function() {
+            var calculateBtn = document.getElementById("calculateBtn");
+            if (this.value === "") {
+                calculateBtn.style.display = "block";
+            } else {
+                calculateBtn.style.display = "none";
+            }
+        });
+
+        function submit(){
+            var slROI = parseFloat(document.getElementById("txtROI").value);
+            var slPercentage = parseFloat(document.getElementById("txtInput").value);
+            var maxLeverage = parseInt(document.querySelector('input[name="maxLeverage"]:checked').value);
+            
+            var leverage = slROI / slPercentage;
+            var capital;
+
+            if (leverage > maxLeverage) {
+                var multiFactor = leverage / maxLeverage;
+                capital = multiFactor * 5;
+                leverage = maxLeverage;
+            } else {
+                capital = 5;
+            }
+
+            document.getElementById("lev").innerHTML = `<span>Leverage:</span> ${Math.floor(leverage)}x`;
+            document.getElementById("capital").innerHTML = `<span>Capital %:</span> ${Math.floor(capital)}%`;
+            document.getElementById("sl").innerHTML = `<span>ROI when you Stopped out:</span> ${slROI}%`;
+
+            if (slROI > 100){
+                alert("Your ROI is greater than 100%. Please adjust your ROI.");
+            }
+        }
+    </script>
 </body>
-
-<script>
-function submit(){
-    var slROI = document.getElementById("txtROI").value;
-
-    var slPercentage = document.getElementById("txtInput").value;
-
-    if(document.getElementById('x20').checked){
-        maxLeverage = 20;
-    }
-    else if (document.getElementById('x25').checked) {
-        maxLeverage = 25;
-    } 
-    else if (document.getElementById('x50').checked) {
-        maxLeverage = 50;
-    }  
-    else if (document.getElementById('x75').checked) {
-        maxLeverage = 75;
-    } 
-    else if (document.getElementById('x100').checked) {
-        maxLeverage = 100;
-    } 
-    else if (document.getElementById('x125').checked) {
-        maxLeverage = 125;
-    } 
-    else{maxLeverage = 10;}
-
-    leverage = slROI / slPercentage;
-
-    if (leverage > maxLeverage){
-        multiFactor = leverage /maxLeverage;
-        capital = multiFactor * 5;
-        leverage = maxLeverage
-    }
-    else if(leverage <= maxLeverage){
-        capital = 5;
-    }
-
-    document.getElementById("lev").innerHTML = `Leverage - ${Math.floor(leverage)}x`;
-    document.getElementById("capital").innerHTML = `Capital % - ${Math.floor(capital)}%`;
-    document.getElementById("sl").innerHTML = `ROI when you Stopped out - ${slROI}%`;
-
-
-    if (slROI > 100){
-        alert("Your ROI is greater than 100%. I recommend you to change ROI");
-    }
-
-}
-</script>
 </html>
