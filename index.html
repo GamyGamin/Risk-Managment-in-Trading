@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -40,11 +41,9 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: transform 0.3s ease; /* Added animation */
         }
         button:hover {
             background-color: #45a049;
-            transform: scale(1.1); /* Added animation */
         }
         #result {
             margin-top: 20px;
@@ -85,7 +84,7 @@
             <input type="radio" id="x200" name="maxLeverage" value="200">
             <label for="x200">x200</label>
         </div>
-        <button id="calculateBtn" onclick="submit()">Calculate</button>
+        <button onclick="submit()">Calculate</button>
         <div id="result">
             <div id="lev"></div>
             <div id="capital"></div>
@@ -93,22 +92,6 @@
         </div>
     </div>
     <script>
-        document.getElementById("calculateBtn").addEventListener("mouseover", function() {
-            var slPercentage = document.getElementById("txtInput").value;
-            if (slPercentage === "") {
-                this.style.display = "none";
-            }
-        });
-
-        document.getElementById("txtInput").addEventListener("input", function() {
-            var calculateBtn = document.getElementById("calculateBtn");
-            if (this.value === "") {
-                calculateBtn.style.display = "block";
-            } else {
-                calculateBtn.style.display = "none";
-            }
-        });
-
         function submit(){
             var slROI = parseFloat(document.getElementById("txtROI").value);
             var slPercentage = parseFloat(document.getElementById("txtInput").value);
